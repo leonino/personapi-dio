@@ -1,14 +1,13 @@
 package one.digitalinovation.personapi.entity;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -26,7 +25,7 @@ public class Person {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false, unique = true, length = 11)
+    @Column(nullable = false, unique = true)
     private String cpf;
 
     private LocalDate birthDate;
