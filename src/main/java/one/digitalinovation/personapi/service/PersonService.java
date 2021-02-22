@@ -14,8 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class PersonService {
-    private PersonRepository personRepository;
-
+    private final PersonRepository personRepository;
     private final PersonMapper personMapper = PersonMapper.INSTANCE;
 
     @Autowired
@@ -27,10 +26,7 @@ public class PersonService {
         Person personToSave = PersonMapper.INSTANCE.toModel(personDTO);
 
         Person savePerson = personRepository.save(personToSave);
-        return MessageResponseDTO
-                .builder()
-                .message("Created person with ID "+ savePerson.getId())
-                .build();
+        return createdMessageResponse(savePerson.getId(), "Created person with ID ");
     }
 
     public List<PersonDTO> listAll() {
@@ -45,13 +41,28 @@ public class PersonService {
         return personMapper.toDTO(person);
     }
 
-    public void delete(Long id) throws PersonNotFoundException {
+    public void deleteById(Long id) throws PersonNotFoundException {
         Person person = verifyExists(id);
         personRepository.delete(person);
+    }
+
+    public MessageResponseDTO updateById(Long id, PersonDTO personDTO) throws PersonNotFoundException {
+        verifyExists(id);
+        Person personToUpdate = PersonMapper.INSTANCE.toModel(personDTO);
+        Person updatePerson = personRepository.save(personToUpdate);
+        return createdMessageResponse(updatePerson.getId(), "Updated person with ID ");
+    }
+
+    private MessageResponseDTO createdMessageResponse(Long id, String message) {
+        return MessageResponseDTO
+                .builder()
+                .message(message + id)
+                .build();
     }
 
     private Person verifyExists(Long id) throws PersonNotFoundException {
         return personRepository.findById(id)
                 .orElseThrow(() -> new PersonNotFoundException(id));
     }
+
 }
