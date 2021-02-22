@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("/api/v1/people")
 public class PersonController {
 
-    private PersonService personService;
+    private final PersonService personService;
 
     @Autowired
     public PersonController(PersonService personService) {
@@ -40,9 +40,14 @@ public class PersonController {
         return personService.findById(id);
     }
 
+    @PutMapping("/{id}")
+    public MessageResponseDTO updatePerson(@PathVariable Long id, @RequestBody PersonDTO personDTO) throws PersonNotFoundException {
+        return personService.updateById(id,personDTO);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) throws PersonNotFoundException {
-        personService.delete(id);
+        personService.deleteById(id);
     }
 }
